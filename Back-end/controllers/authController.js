@@ -14,7 +14,7 @@ export const signup = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const { error, value } = signupSchema.validate({ email, password });
+        const { error } = signupSchema.validate({ email, password });
 
         if (error) {
             return res
@@ -57,7 +57,7 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const { error, value } = signinSchema.validate({ email, password });
+        const { error } = signinSchema.validate({ email, password });
         if (error) {
             return res
                 .status(401)
