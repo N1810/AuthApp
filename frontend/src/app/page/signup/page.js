@@ -19,6 +19,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { API } from "../../api";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLogin from "../google-login/page";
 
 export default function Signup() {
     const router = useRouter();
@@ -55,19 +57,13 @@ export default function Signup() {
         try {
             const result = await axios.post(
                 "http://localhost:8000/api/auth/signup",
-                {
-                    email,
-                    password,
-                }
+                { email, password }
             );
-            setSuccessMessage(
-                "Signup successful! Redirecting to login...",
-                result
-            );
+            setSuccessMessage("Signup successful! Redirecting to login...");
             setOpenSnackbar(true);
             setTimeout(() => {
-                router.push("page/signin");
-            }, 10000);
+                router.push("/signin");
+            }, 5000);
         } catch (error) {
             setErrorMessage(error?.response?.data?.message || "Signup failed");
             setErrorSnackbar(true);
@@ -145,21 +141,14 @@ export default function Signup() {
                                     fullWidth
                                     className="bg-blue-500 text-white hover:bg-blue-600"
                                 >
-                                    Sign in
+                                    Sign Up
                                 </Button>
                                 <Typography
                                     variant="body2"
                                     className="text-center mt-4 text-gray-600"
                                 >
                                     Already have an account?{" "}
-                                    <Link
-                                        href="/signup"
-                                        underline="hover"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            router.push("page/signin");
-                                        }}
-                                    >
+                                    <Link href="/signin" underline="hover">
                                         Sign in
                                     </Link>
                                 </Typography>
@@ -172,18 +161,10 @@ export default function Signup() {
                                     or
                                 </Typography>
                             </Divider>
-                            <Button
-                                variant="outlined"
-                                fullWidth
-                                className="flex items-center justify-center gap-2 text-gray-600 border-gray-300"
-                            >
-                                <img
-                                    src="/images/logos/google.png"
-                                    alt="Google Logo"
-                                    className="w-5 h-5"
-                                />
-                                Sign up with Google
-                            </Button>
+                            {/* Google Auth Wrapper */}
+                            <GoogleOAuthProvider clientId="1046942977592-42890k6sggupdsiufj9tsl5rmll5g167.apps.googleusercontent.com">
+                                <GoogleLogin />
+                            </GoogleOAuthProvider>
                         </CardContent>
                     </Card>
                 </Container>
