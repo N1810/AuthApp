@@ -18,4 +18,6 @@ router.patch(
 );
 router.patch("/change-password", identifier, authController.changePassword);
 
+router.get("/google", authController.googleAuth);
+
 export default router;

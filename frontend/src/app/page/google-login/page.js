@@ -1,3 +1,4 @@
+import { googleAuth } from "@/app/api";
 import { Button } from "@mui/material";
 import { useGoogleLogin } from "@react-oauth/google";
 
@@ -5,6 +6,12 @@ export default function GoogleLogin() {
     const googleLogin = useGoogleLogin({
         onSuccess: async (authResult) => {
             try {
+                if (authResult["code"]) {
+                    const result = await googleAuth(authResult["code"]);
+
+                    const { email } = result.data.user;
+                    console.log(result.data.user);
+                }
                 console.log(authResult);
             } catch (error) {
                 console.log(error);
