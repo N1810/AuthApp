@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
     Button,
     Checkbox,
@@ -8,18 +9,56 @@ import {
     InputAdornment,
     TextField,
     Typography,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import Link from "next/link";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Signin() {
+    const router = useRouter();
     const [isPasswordShown, setIsPasswordShown] = useState(false);
-    const {
-        control,
-        formState: { errors },
-    } = useForm();
-    const handleClickShowPassword = () => setIsPasswordShown((show) => !show);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const handleClickShowPassword = () => setIsPasswordShown((prev) => !prev);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!email || !password) {
+            setErrorMessage("Email and password are required");
+            setOpenSnackbar(true);
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                "http://localhost:8000/api/auth/signin",
+                { email, password }
+            );
+
+            if (response.data.success) {
+                setSuccessMessage("Logged in successfully! Redirecting...");
+                setOpenSnackbar(true);
+                setTimeout(() => {
+                    router.push("/dashboard");
+                }, 3000);
+            }
+        } catch (error) {
+            const errorMsg = error?.response?.data?.message || "Sign-in failed";
+            if (errorMsg === "User Doesn't Exists") {
+                setTimeout(() => {
+                    router.push("/signup");
+                }, 3000);
+            }
+            setErrorMessage(errorMsg);
+            setOpenSnackbar(true);
+        }
+    };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -34,50 +73,36 @@ export default function Signin() {
                     Please sign-in to your account and start the adventure
                 </Typography>
 
-                <form className="flex flex-col gap-4">
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Email"
-                                fullWidth
-                                type="email"
-                                error={!!errors.email}
-                                helperText={errors.email?.message}
-                            />
-                        )}
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <TextField
+                        label="Email"
+                        fullWidth
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
-                    <Controller
-                        name="password"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Password"
-                                fullWidth
-                                type={isPasswordShown ? "text" : "password"}
-                                error={!!errors.password}
-                                helperText={errors.password?.message}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <i
-                                                className={`ri-${
-                                                    isPasswordShown
-                                                        ? "eye-off-line"
-                                                        : "eye-line"
-                                                } cursor-pointer`}
-                                                onClick={
-                                                    handleClickShowPassword
-                                                }
-                                            />
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                        )}
+                    <TextField
+                        label="Password"
+                        fullWidth
+                        type={isPasswordShown ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <i
+                                        className={`ri-${
+                                            isPasswordShown
+                                                ? "eye-off-line"
+                                                : "eye-line"
+                                        } cursor-pointer`}
+                                        onClick={handleClickShowPassword}
+                                    />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <div className="flex items-center justify-between">
                         <FormControlLabel
@@ -134,6 +159,20 @@ export default function Signin() {
                     Sign in with Google
                 </Button>
             </div>
+
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={4000}
+                onClose={() => setOpenSnackbar(false)}
+            >
+                <Alert
+                    onClose={() => setOpenSnackbar(false)}
+                    severity={errorMessage ? "error" : "success"}
+                    sx={{ width: "100%" }}
+                >
+                    {errorMessage || successMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
