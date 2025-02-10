@@ -148,7 +148,7 @@ export default function Signup() {
                                     className="text-center mt-4 text-gray-600"
                                 >
                                     Already have an account?{" "}
-                                    <Link href="/signin" underline="hover">
+                                    <Link href="/" underline="hover">
                                         Sign in
                                     </Link>
                                 </Typography>

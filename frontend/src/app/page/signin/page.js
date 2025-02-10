@@ -47,7 +47,7 @@ export default function Signin() {
                 setSuccessMessage("Logged in successfully! Redirecting...");
                 setOpenSnackbar(true);
                 setTimeout(() => {
-                    router.push("/dashboard");
+                    router.push("page/dashboard");
                 }, 3000);
             }
         } catch (error) {
@@ -134,7 +134,7 @@ export default function Signin() {
                     >
                         New on our platform?{" "}
                         <Link
-                            href="/signup"
+                            href="page/signup"
                             className="text-blue-600 underline"
                         >
                             Create an account
