@@ -323,4 +323,12 @@ export const googleAuth = async (req, res) => {
     }
 };
 
+export const authStaus = async () => {};
+
+export const setup2FA = async () => {};
+
+export const verify2FA = async () => {};
+
+export const reset2FA = async () => {};
+
 export const facebookAuth = async (req, res) => {};

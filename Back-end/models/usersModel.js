@@ -36,6 +36,13 @@ const userSchema = mongoose.Schema(
             type: Number,
             select: false,
         },
+        isMfaActive: {
+            type: Boolean,
+            required: false,
+        },
+        twoFactorSecret: {
+            type: String,
+        },
     },
     {
         timestamps: true,

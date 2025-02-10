@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routers/authRouter.js";
+import session from "express-session";
+import passport from "passport";
 
 connectDB();
 
@@ -16,6 +18,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRouter);
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || "secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 6000 * 60,
+        },
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.post("/register", (req, res) => {});
 
