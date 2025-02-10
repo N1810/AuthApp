@@ -15,6 +15,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLogin from "../google-login/page";
 
 export default function Signin() {
     const router = useRouter();
@@ -145,19 +147,9 @@ export default function Signin() {
                         or
                     </Typography>
                 </Divider>
-
-                <Button
-                    variant="outlined"
-                    fullWidth
-                    className="flex items-center justify-center gap-2 text-gray-600 border-gray-300"
-                >
-                    <img
-                        src="/images/logos/google.png"
-                        alt="Google Logo"
-                        className="w-5 h-5"
-                    />
-                    Sign in with Google
-                </Button>
+                <GoogleOAuthProvider clientId="1046942977592-42890k6sggupdsiufj9tsl5rmll5g167.apps.googleusercontent.com">
+                    <GoogleLogin />
+                </GoogleOAuthProvider>
             </div>
 
             <Snackbar

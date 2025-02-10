@@ -21,8 +21,10 @@
         "helmet": "^8.0.0",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.9.5",
+        "node-json-db": "^2.3.1",
         "nodemailer": "^6.10.0",
         "nodemon": "^3.1.9",
+        "speakeasy": "^2.0.0",
         "yup": "^1.6.1"
     }
 }

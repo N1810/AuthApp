@@ -291,34 +291,7 @@ export const changePassword = async (req, res) => {
     }
 };
 
-// export const googleAuth = async (req, res, next) => {
-//     const { code } = req.query;
-//     try {
-//         const googleRes = await oauth2Client.getToken(code);
-//         oauth2Client.setCredentials(googleRes.tokens);
-//         const { data } = await axios.get(
-//             `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
-//         );
-//         const { email } = data;
-//         let user = await usersModel.findOne({ email });
-//         if (!user) {
-//             user = await usersModel.create({ email });
-//         }
-//         const { _id } = user;
-//         const token = jwt.sign({ _id, email }, process.env.TOKEN_SECRET, {
-//             expiresIn: process.env.JWT_TIMEOUT,
-//         });
-//         return res.status(200).json({ message: "success", token, user });
-//     } catch (error) {
-//         console.log("====================================");
-
-//         res.status(500).json({ message: "Internal Server Error" });
-//         console.log(error);
-//         console.log("====================================");
-//     }
-// };
-
-export const googleAuth = async (req, res, next) => {
+export const googleAuth = async (req, res) => {
     const { code } = req.query;
     try {
         const googleRes = await oauth2Client.getToken(code);
@@ -330,7 +303,6 @@ export const googleAuth = async (req, res, next) => {
 
         let user = await usersModel.findOne({ email }).select("+password");
         if (!user) {
-            // Generate a random password
             const randomPassword = crypto.randomBytes(10).toString("hex");
             const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
@@ -350,3 +322,5 @@ export const googleAuth = async (req, res, next) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export const facebookAuth = async (req, res) => {};
