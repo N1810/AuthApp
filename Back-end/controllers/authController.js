@@ -329,6 +329,6 @@ export const setup2FA = async () => {};
 
 export const verify2FA = async () => {};
 
-export const reset2FA = async () => {};
+export const reset2FA = async (req, res) => {};
 
 export const facebookAuth = async (req, res) => {};
